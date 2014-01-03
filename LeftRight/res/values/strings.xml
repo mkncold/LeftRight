@@ -6,9 +6,17 @@
     <string name="hello_world">Hello world!</string>
     <string name="left">left</string>
     <string name="right">right</string>
+
     <string-array name="lefts">
-        <item >left</item>
-        <item >LEFT</item>
+        <item>left</item>
+        <item>LEFT</item>
     </string-array>
+
+    <string name="leftClick">leftClick</string>
+    <string name="rightClick">rightClick</string>
+    <string name="title_activity_results">ViewResults</string>
+    <string name="correct">Correct:</string>
+    <string name="incorrect">Incorrect:</string>
+    <string name="total">Total:</string>
 
 </resources>

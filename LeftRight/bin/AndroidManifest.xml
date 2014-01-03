@@ -23,6 +23,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.example.leftright.ResultsActivity"
+            android:label="@string/title_activity_results"
+            android:theme="@style/Theme.FullScreen" >
+        </activity>
     </application>
 
 </manifest>

@@ -8,7 +8,8 @@
         android:id="@+id/leftButton"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:onClick="leftClick" />
 
     <TextView
         android:id="@+id/queryText"
@@ -16,7 +17,6 @@
         android:layout_height="match_parent"
         android:layout_weight="2"
         android:gravity="center"
-        android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="@dimen/mainTextSize" />
 
@@ -24,6 +24,7 @@
         android:id="@+id/rightButton"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:onClick="rightClick" />
  
 </LinearLayout>
