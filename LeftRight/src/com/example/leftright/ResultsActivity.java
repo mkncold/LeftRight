@@ -12,27 +12,32 @@ public class ResultsActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.v(Config.TAG_USER, "ResultActivity Created");
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 		setContentView(R.layout.activity_results);
 		
+		
+	}
+	
+	
+	@Override
+	protected void onStart(){
+		Log.v(Config.TAG_USER, "ResultActivity Started");
+		super.onStart();
+		
 		// Get the Score from the intent
 	    Intent intent = getIntent();
-	    int[] score = intent.getIntArrayExtra(MainActivity.EXTRA_SCORE);
+	    int[] score = intent.getIntArrayExtra(Config.EXTRA_SCORE);
 		
 		TextView correctText = (TextView)findViewById(R.id.correctVal);
 		TextView incorrectText = (TextView)findViewById(R.id.incorrectVal);
 		TextView totalText = (TextView)findViewById(R.id.totalVal);
 		
-		if (correctText == null){
-			Log.d("NULL P", "correctText is NULL");
-		}
 		correctText.setText(String.valueOf(score[0]));
 		incorrectText.setText(String.valueOf(score[1]));
 		totalText.setText(String.valueOf(score[2]));
-		
-		
 	}
 
 	@Override
