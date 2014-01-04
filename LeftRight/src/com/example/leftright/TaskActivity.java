@@ -1,12 +1,15 @@
 package com.example.leftright;
 
 import com.example.leftright.Config;
+import com.example.leftright.Config.Side;
 
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
@@ -35,6 +38,13 @@ public class TaskActivity extends Activity implements SensorEventListener, Runna
 	private int incorrect = 0;
 	
 	private Config.Side answer; //The answer to the query
+	
+	private static SoundPool soundPool;
+	private static int leftSound;
+	private static int rightSound;
+	
+	/** Indicates if a query is an audio query and not text */
+	private static boolean isAudioQuery;
 	
 	private StopTask stopTask = new StopTask(this);
 	
@@ -78,6 +88,10 @@ public class TaskActivity extends Activity implements SensorEventListener, Runna
 		    SensorManager.remapCoordinateSystem(mRotationMatrix, SensorManager.AXIS_Y, SensorManager.AXIS_MINUS_X, mRotationMatrix2);
 		
 		
+		soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 100);
+		leftSound = soundPool.load(getApplicationContext(), R.raw.left, 1);
+		rightSound = soundPool.load(getApplicationContext(), R.raw.right, 1);
+		
 		/* Initialize field View widgets */
 		queryText = (TextView)findViewById(R.id.queryText);
 		rightButton = (Button) findViewById(R.id.rightButton);
@@ -97,6 +111,9 @@ public class TaskActivity extends Activity implements SensorEventListener, Runna
 		
     	//Clear the queryText view
     	queryText.setText("");
+    	
+    	//Set the audio query flag to it's default value
+    	isAudioQuery = false;
     	
     	//Reset the score
     	resetScore();
@@ -154,14 +171,25 @@ public class TaskActivity extends Activity implements SensorEventListener, Runna
 
 		queryText.setTextColor(Color.BLUE);
 		double rnum = Math.random();
-		//queryText.setText("RIGHT");
-		if (rnum < 0.5){
+		if (rnum < 0.25){
 			queryText.setText("LEFT");
 			answer = Config.Side.LEFT;
 		}
-		else if (rnum >= 0.5){
+		else if (rnum < 0.5){
 			queryText.setText("RIGHT");
 			answer = Config.Side.RIGHT;
+		}
+		else if (rnum < 0.75){
+			queryText.setText("");
+			soundPool.play(leftSound, 1.0f, 1.0f, 1, 0, Config.SOUND_RATE);
+			answer = Config.Side.LEFT;
+			isAudioQuery = true;
+		}
+		else if (rnum < 1){
+			queryText.setText("");
+			soundPool.play(rightSound, 1.0f, 1.0f, 1, 0, Config.SOUND_RATE);
+			answer = Config.Side.RIGHT;
+			isAudioQuery = true;
 		}
 	}
 	
@@ -178,6 +206,15 @@ public class TaskActivity extends Activity implements SensorEventListener, Runna
 	
 	/** Adds either correct or incorrect points to the total score */
 	public void addScore(Config.Score s){
+		
+		//If it is an audio query, set the text to show the query text
+		if(isAudioQuery){
+			if (answer == Side.LEFT)
+				queryText.setText("LEFT");
+			else if (answer == Side.RIGHT)
+				queryText.setText("RIGHT");
+		}
+		
 		switch (s){
 		case CORRECT:
 			++correct; queryText.setTextColor(Color.GREEN); break;
@@ -190,7 +227,7 @@ public class TaskActivity extends Activity implements SensorEventListener, Runna
 		
 		++total;
 		
-		if (total > Config.NUM_OF_TRIALS){
+		if (total >= Config.NUM_OF_TRIALS){
 			//Show the results
 			Intent intent = new Intent(this, ResultsActivity.class);
 			intent.putExtra(Config.EXTRA_SCORE, new int[] {correct, incorrect, total});
